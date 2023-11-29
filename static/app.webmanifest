@@ -1,0 +1,13 @@
+{
+	"theme_color": "#c00000",
+	"background_color": "#ffffff",
+	"orientation": "any",
+	"display": "standalone",
+	"dir": "auto",
+	"lang": "de",
+	"name": "buchner-price-calc",
+	"short_name": "price-calc",
+	"start_url": "/",
+	"scope": "/",
+	"description": "Hi there!"
+}

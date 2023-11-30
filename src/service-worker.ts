@@ -63,5 +63,5 @@ sw.addEventListener('fetch', (event) => {
 		}
 	}
 
-	event.respondWith(respond());
+	event.respondWith(respond().then((response) => response ?? new Response(null, { status: 404 })));
 });

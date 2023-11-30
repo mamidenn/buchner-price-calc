@@ -1,5 +1,6 @@
 <script lang="ts">
 	import '../app.pcss';
+	import './roboto.pcss';
 	import { AppShell } from '@skeletonlabs/skeleton';
 	import { AppBar } from '@skeletonlabs/skeleton';
 	import { AppRail, AppRailTile, AppRailAnchor } from '@skeletonlabs/skeleton';

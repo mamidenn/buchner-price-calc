@@ -45,6 +45,7 @@ sw.addEventListener('fetch', (event) => {
 
 		// `build`/`files` can always be served from the cache
 		if (ASSETS.includes(url.pathname)) {
+			console.debug(`Serving ${url.pathname} from cache.`);
 			return cache.match(url.pathname);
 		}
 
@@ -59,6 +60,7 @@ sw.addEventListener('fetch', (event) => {
 
 			return response;
 		} catch {
+			console.warn(`No network! Serving ${url.pathname} from cache.`);
 			return cache.match(event.request);
 		}
 	}

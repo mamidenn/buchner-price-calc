@@ -2,6 +2,7 @@ import { join } from 'path';
 import type { Config } from 'tailwindcss';
 import { skeleton } from '@skeletonlabs/tw-plugin';
 import typoggraphy from '@tailwindcss/typography';
+import forms from '@tailwindcss/forms';
 import { buchner } from './buchner-theme';
 
 const config = {
@@ -13,7 +14,7 @@ const config = {
 	theme: {
 		extend: {}
 	},
-	plugins: [typoggraphy, skeleton({ themes: { preset: ['skeleton'], custom: [buchner] } })]
+	plugins: [typoggraphy, forms, skeleton({ themes: { preset: ['skeleton'], custom: [buchner] } })]
 } satisfies Config;
 
 export default config;

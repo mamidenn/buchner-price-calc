@@ -17,4 +17,5 @@ RUN pnpm install --frozen-lockfile --prod
 FROM node:20 AS PROD
 WORKDIR /app
 COPY --from=STAGE /src .
+ENV ORIGIN http://localhost:3000
 ENTRYPOINT node build

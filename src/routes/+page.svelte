@@ -1,39 +1,22 @@
 <script lang="ts">
-	import { applyAction, enhance } from '$app/forms';
 	import { SlideToggle } from '@skeletonlabs/skeleton';
-	import type { ActionData } from './$types';
-	import { getPrices } from '$lib/priceCalculations';
-
-	export let form: ActionData;
+	import { calculatePrice } from '$lib/priceCalculations';
 
 	const currency = Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' });
 	const percent = Intl.NumberFormat('de-DE', { style: 'percent', maximumFractionDigits: 2 });
+
+	let printPrice = 27.5;
+	let amount = 1;
+	let duration = 1;
+	let hasAccount = false;
+	$: result = calculatePrice(printPrice, amount, duration, hasAccount);
 </script>
 
-<form
-	method="post"
-	use:enhance={({ formData }) => {
-		return async ({ result }) => {
-			if (result.type === 'error') {
-				const offlineResult = getPrices(formData);
-				applyAction({ type: 'success', status: 200, data: offlineResult });
-				return;
-			}
-			await applyAction(result);
-		};
-	}}
-	class="space-y-2"
->
+<div class="space-y-2">
 	<label class="label">
 		<span>Preis Print-Lehrwerk</span>
 		<div class="input-group input-group-divider grid-cols-[1fr_auto]">
-			<input
-				type="number"
-				name="price-print"
-				min="0.00"
-				step="0.01"
-				value={form?.['price-print'] ?? 27.5}
-			/>
+			<input type="number" name="price-print" min="0.00" step="0.01" bind:value={printPrice} />
 			<div class="input-group-shim">€</div>
 		</div>
 	</label>
@@ -46,30 +29,29 @@
 			min="0"
 			max="10000"
 			step="1"
-			value={form?.amount ?? 1}
+			bind:value={amount}
 		/>
 	</label>
 	<label class="label">
 		<span>Laufzeit</span>
 		<div class="input-group input-group-divider grid-cols-[1fr_auto]">
-			<input type="number" name="duration" min="1" step="1" max="6" value={form?.duration ?? 1} />
+			<input type="number" name="duration" min="1" step="1" max="6" bind:value={duration} />
 			<div class="input-group-shim">Jahre</div>
 		</div>
 	</label>
-	<SlideToggle name="has-account" checked={form?.['has-account'] ?? false}>
-		Bestellung via Schulkonto
-	</SlideToggle>
-	<button type="submit" class="btn variant-filled-primary block ml-auto">Berechnen</button>
-</form>
+	<SlideToggle name="has-account" bind:checked={hasAccount}>Bestellung via Schulkonto</SlideToggle>
+</div>
 
-{#if form?.result}
+{#if result}
 	<div class="table-container">
 		<table class="table table-comfortable">
-			<tr><td>pro Exemplar</td><td class="text-right">{currency.format(form.result.unit)}</td></tr>
-			<tr><td>gesamt</td><td class="text-right">{currency.format(form.result.overall)}</td></tr>
-			<tr>
-				<td>inkl. Rabatt</td><td class="text-right">{percent.format(form.result.discount)}</td>
-			</tr>
+			<tbody>
+				<tr><td>pro Exemplar</td><td class="text-right">{currency.format(result.unit)}</td></tr>
+				<tr><td>gesamt</td><td class="text-right">{currency.format(result.overall)}</td></tr>
+				<tr>
+					<td>inkl. Rabatt</td><td class="text-right">{percent.format(result.discount)}</td>
+				</tr>
+			</tbody>
 		</table>
 	</div>
 {/if}

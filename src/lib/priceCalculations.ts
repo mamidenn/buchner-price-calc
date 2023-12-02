@@ -1,7 +1,3 @@
-import { fail } from '@sveltejs/kit';
-import { z } from 'zod';
-import { zfd } from 'zod-form-data';
-
 export const digitalPrice = (printPrice: number) => {
 	if (printPrice < 20) return 6.5;
 	if (printPrice <= 27.5) return 7.5;
@@ -28,41 +24,21 @@ export const discountDuration = (duration: number) => {
 export const discountAccount = (hasAccount: boolean) => {
 	return hasAccount ? 0.2 : 0;
 };
-export const calculatePrice = (data: {
-	'price-print': number;
-	amount: number;
-	duration: number;
-	'has-account': boolean;
-}) => {
-	const price = digitalPrice(data['price-print']);
+export const calculatePrice = (
+	printPrice: number,
+	amount: number,
+	duration: number,
+	hasAccount: boolean
+) => {
+	const price = digitalPrice(printPrice);
 	const discount =
-		discountAmount(data.amount) +
-		discountDuration(data.duration) +
-		discountAccount(data['has-account']);
+		discountAmount(amount) + discountDuration(duration) + discountAccount(hasAccount);
 	return {
 		unit: price * (1 - discount),
-		discountAmount: discountAmount(data.amount),
-		discountDuration: discountDuration(data.duration),
-		discountAccount: discountAccount(data['has-account']),
+		discountAmount: discountAmount(amount),
+		discountDuration: discountDuration(duration),
+		discountAccount: discountAccount(hasAccount),
 		discount,
-		overall: data.amount * data.duration * price * (1 - discount)
-	};
-};
-
-const formSchema = zfd.formData({
-	'price-print': zfd.numeric(z.number().min(0)),
-	amount: zfd.numeric(z.number().int().min(1)),
-	duration: zfd.numeric(z.number().int().min(1).max(6)),
-	'has-account': zfd.checkbox()
-});
-
-export const getPrices = (formData: FormData) => {
-	const result = formSchema.safeParse(formData);
-	if (!result.success) {
-		return fail(400, { error: result.error.flatten() });
-	}
-	return {
-		...result.data,
-		result: calculatePrice(result.data)
+		overall: amount * duration * price * (1 - discount)
 	};
 };

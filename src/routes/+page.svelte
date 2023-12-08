@@ -4,12 +4,16 @@
 
 	const currency = Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' });
 	const percent = Intl.NumberFormat('de-DE', { style: 'percent', maximumFractionDigits: 2 });
+	const number = Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-	let printPrice = 27.5;
-	let amount = 1;
-	let duration = 1;
+	let printPrice: number | null = null;
+	let amount: number | null = null;
+	let duration: number | null = null;
 	let hasAccount = false;
-	$: result = calculatePrice(printPrice, amount, duration, hasAccount);
+	$: result =
+		printPrice !== null && amount !== null && duration !== null
+			? calculatePrice(printPrice, amount, duration, hasAccount)
+			: null;
 </script>
 
 <div class="max-w-screen-sm space-y-6">
@@ -24,6 +28,7 @@
 					min="0.00"
 					step="0.01"
 					bind:value={printPrice}
+					placeholder={number.format(27.5)}
 				/>
 				<div class="input-group-shim">€</div>
 			</div>
@@ -40,6 +45,7 @@
 					max="10000"
 					step="1"
 					bind:value={amount}
+					placeholder="1"
 				/>
 			</label>
 			<label class="label basis-1/3">
@@ -53,6 +59,7 @@
 						step="1"
 						max="6"
 						bind:value={duration}
+						placeholder="1"
 					/>
 					<div class="input-group-shim">Jahre</div>
 				</div>
@@ -63,36 +70,34 @@
 		</SlideToggle>
 	</div>
 
-	{#if result}
-		<h2 class="text-xl font-light">Preise</h2>
-		<div class="table-container">
-			<table class="table">
-				<thead>
-					<tr>
-						<th class="text-end">Einzelpreis</th>
-						<th class="text-end">Menge</th>
-						<th class="text-end">inkl. Rabatt</th>
-						<th class="text-end">gesamt</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td class="text-end">{currency.format(result.unit)}</td>
-						<td class="text-end">{amount * duration}</td>
-						<td class="text-end">
-							<div
-								class:highlight={result.discount > 0}
-								style="--highlight-strength: {result.discount}"
-							>
-								{percent.format(result.discount)}
-							</div>
-						</td>
-						<td class="text-end">{currency.format(result.overall)}</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	{/if}
+	<h2 class="text-xl font-light">Preise</h2>
+	<div class="table-container">
+		<table class="table">
+			<thead>
+				<tr>
+					<th class="text-end">Einzelpreis</th>
+					<th class="text-end">Menge</th>
+					<th class="text-end">inkl. Rabatt</th>
+					<th class="text-end">gesamt</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="text-end">{currency.format(result ? result.unit : 0)}</td>
+					<td class="text-end">{(amount ?? 0) * (duration ?? 0)}</td>
+					<td class="text-end">
+						<div
+							class:highlight={result && result.discount > 0}
+							style="--highlight-strength: {result?.discount ?? 0}"
+						>
+							{percent.format(result ? result.discount : 0)}
+						</div>
+					</td>
+					<td class="text-end">{currency.format(result ? result.overall : 0)}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </div>
 
 <style lang="postcss">

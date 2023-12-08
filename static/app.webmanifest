@@ -1,13 +1,14 @@
 {
+	"id": "de.dennhardt.buchner.price-calc",
 	"theme_color": "#c00000",
 	"background_color": "#ffffff",
 	"orientation": "any",
 	"display": "standalone",
 	"dir": "auto",
 	"lang": "de",
-	"name": "buchner-price-calc",
-	"short_name": "price-calc",
+	"name": "C.C.Buchner Preisrechner",
+	"short_name": "Preisrechner",
+	"categories": ["business"],
 	"start_url": "/",
-	"scope": "/",
-	"description": "Hi there!"
+	"scope": "/"
 }

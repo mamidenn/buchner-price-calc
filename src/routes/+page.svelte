@@ -1,38 +1,24 @@
 <script lang="ts">
-	import { SlideToggle } from '@skeletonlabs/skeleton';
 	import { calculatePrice } from '$lib/priceCalculations';
+	import { SlideToggle } from '@skeletonlabs/skeleton';
+	import IsbnSelect from './IsbnSelect.svelte';
 
 	const currency = Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' });
 	const percent = Intl.NumberFormat('de-DE', { style: 'percent', maximumFractionDigits: 2 });
-	const number = Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-	let printPrice: number | null = null;
-	let amount: number | null = null;
-	let duration: number | null = null;
+	let digitalPrice: number | undefined;
+	let amount: number | undefined;
+	let duration: number | undefined;
 	let hasAccount = false;
 	$: result =
-		printPrice !== null && amount !== null && duration !== null
-			? calculatePrice(printPrice, amount, duration, hasAccount)
-			: null;
+		digitalPrice !== undefined && amount !== undefined && duration !== undefined
+			? calculatePrice(digitalPrice, amount, duration, hasAccount)
+			: undefined;
 </script>
 
 <div class="max-w-screen-sm space-y-6">
-	<div class="space-y-4">
-		<label class="label">
-			<span>Preis Print-Lehrwerk</span>
-			<div class="input-group input-group-divider grid-cols-[1fr_auto]">
-				<input
-					type="number"
-					name="price-print"
-					inputmode="numeric"
-					min="0.00"
-					step="0.01"
-					bind:value={printPrice}
-					placeholder={number.format(27.5)}
-				/>
-				<div class="input-group-shim">€</div>
-			</div>
-		</label>
+	<div class="flex flex-col gap-4">
+		<IsbnSelect bind:digitalPrice />
 		<div class="flex flex-col sm:flex-row gap-4">
 			<label class="label basis-2/3">
 				<span>Menge</span>

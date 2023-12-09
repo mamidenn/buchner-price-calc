@@ -18,4 +18,6 @@ FROM node:20 AS PROD
 WORKDIR /app
 COPY --from=STAGE /src .
 ENV ORIGIN http://localhost:3000
+EXPOSE 3000
+VOLUME /app/build/client/data
 ENTRYPOINT node build

@@ -25,20 +25,19 @@ export const discountAccount = (hasAccount: boolean) => {
 	return hasAccount ? 0.2 : 0;
 };
 export const calculatePrice = (
-	printPrice: number,
+	digitalPrice: number,
 	amount: number,
 	duration: number,
 	hasAccount: boolean
 ) => {
-	const price = digitalPrice(printPrice);
 	const discount =
 		discountAmount(amount) + discountDuration(duration) + discountAccount(hasAccount);
 	return {
-		unit: price * (1 - discount),
+		unit: digitalPrice * (1 - discount),
 		discountAmount: discountAmount(amount),
 		discountDuration: discountDuration(duration),
 		discountAccount: discountAccount(hasAccount),
 		discount,
-		overall: amount * duration * price * (1 - discount)
+		overall: amount * duration * digitalPrice * (1 - discount)
 	};
 };

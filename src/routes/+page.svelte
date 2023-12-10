@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { calculatePrice } from '$lib/priceCalculations';
 	import { SlideToggle } from '@skeletonlabs/skeleton';
-	import IsbnSelect from './IsbnSelect.svelte';
+	import IsbnSelect from '$lib/IsbnSelect.svelte';
 
 	const currency = Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' });
 	const percent = Intl.NumberFormat('de-DE', { style: 'percent', maximumFractionDigits: 2 });

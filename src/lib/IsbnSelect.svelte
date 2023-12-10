@@ -91,7 +91,12 @@
 		data-popup="isbnPopup"
 		tabindex="-1"
 	>
-		<Autocomplete bind:input={isbn} options={isbnOptions} on:selection={onIsbnSelection} />
+		<Autocomplete
+			bind:input={isbn}
+			options={isbnOptions}
+			on:selection={onIsbnSelection}
+			emptyState="Nichts passendes gefunden"
+		/>
 	</div>
 </div>
 

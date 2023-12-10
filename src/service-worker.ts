@@ -67,3 +67,9 @@ sw.addEventListener('fetch', (event) => {
 
 	event.respondWith(respond().then((response) => response ?? new Response(null, { status: 404 })));
 });
+
+sw.addEventListener('message', (event) => {
+	if (event.data.action === 'skipWaiting') {
+		sw.skipWaiting();
+	}
+});

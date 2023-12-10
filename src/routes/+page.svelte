@@ -7,8 +7,8 @@
 	const percent = Intl.NumberFormat('de-DE', { style: 'percent', maximumFractionDigits: 2 });
 
 	let digitalPrice: number | undefined;
-	let amount: number | undefined;
-	let duration: number | undefined;
+	let amount: number | undefined = 1;
+	let duration: number | undefined = 1;
 	let hasAccount = false;
 	$: result =
 		digitalPrice !== undefined && amount !== undefined && duration !== undefined
@@ -31,7 +31,6 @@
 					max="10000"
 					step="1"
 					bind:value={amount}
-					placeholder="1"
 				/>
 			</label>
 			<label class="label basis-1/3">
@@ -45,7 +44,6 @@
 						step="1"
 						max="6"
 						bind:value={duration}
-						placeholder="1"
 					/>
 					<div class="input-group-shim">Jahre</div>
 				</div>

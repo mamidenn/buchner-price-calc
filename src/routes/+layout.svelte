@@ -7,6 +7,10 @@
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 </script>
 
+<svelte:head>
+	<title>C.C.Buchner Preisrechner</title>
+</svelte:head>
+
 <AppShell>
 	<svelte:fragment slot="header">
 		<AppBar>
@@ -16,7 +20,7 @@
 			<h1 class="text-4xl font-thin">Preisrechner</h1>
 		</AppBar>
 	</svelte:fragment>
-	<div class="container mx-auto p-2 space-y-4">
+	<div class="container mx-auto my-2">
 		<slot />
 	</div>
 </AppShell>

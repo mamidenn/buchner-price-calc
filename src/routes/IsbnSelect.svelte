@@ -9,11 +9,14 @@
 	import { onMount } from 'svelte';
 
 	export let digitalPrice: number | undefined;
-	$: digitalPrice = isbnOptions.filter((o) => o.value === isbn)[0]?.meta?.price;
+	$: if (!directInput) {
+		digitalPrice = isbnOptions.filter((o) => o.value === isbn)[0]?.meta?.price;
+	}
 
 	const currency = Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' });
 
 	let isbn: string = '';
+	let directInput = false;
 
 	const isbnPopupSettings: PopupSettings = {
 		event: 'focus-click',
@@ -30,33 +33,59 @@
 	let isbnOptions: AutocompleteOption<string, { price: number }>[] = [];
 	onMount(async () => {
 		const csv = await fetch('/data/prices.csv');
-		const parsed: { ISBN: string; Preis: string }[] = parse(await csv.text(), {
+		const parsed: { BN: string; Preis: string }[] = parse(await csv.text(), {
 			columns: true,
 			skip_empty_lines: true
 		});
 		isbnOptions = parsed
-			.sort(({ ISBN: a }, { ISBN: b }) => a.localeCompare(b))
-			.map(({ ISBN, Preis }) => ({
-				label: ISBN,
-				value: ISBN,
+			.sort(({ BN: a }, { BN: b }) => a.localeCompare(b))
+			.map(({ BN, Preis }) => ({
+				label: BN,
+				value: BN,
 				meta: { price: Number(Preis) }
 			}));
 	});
 </script>
 
 <div class="root">
-	<label class="label">
-		<span>Print-Lehrwerk</span>
-		<div
-			class="input-group input-group-divider grid-cols-[1fr_auto]"
-			class:not-found={isbn !== '' && isbnOptions.filter((o) => o.value === isbn)[0] === undefined}
-		>
-			<input type="text" name="isbn" bind:value={isbn} use:popup={isbnPopupSettings} />
-			{#if digitalPrice}
-				<div class="input-group-shim">Digitalpreis: {currency.format(digitalPrice)}</div>
-			{/if}
-		</div>
-	</label>
+	{#if !directInput}
+		<label class="label">
+			<span>BN click & study</span>
+			<div
+				class="input-group input-group-divider grid-cols-[1fr_auto]"
+				class:not-found={isbn !== '' &&
+					isbnOptions.filter((o) => o.value === isbn)[0] === undefined}
+			>
+				<input type="text" name="isbn" bind:value={isbn} use:popup={isbnPopupSettings} />
+				{#if digitalPrice}
+					<div class="input-group-shim">Preis: {currency.format(digitalPrice)}</div>
+				{/if}
+			</div>
+		</label>
+	{:else}
+		<label class="label">
+			<span>Preis click & study</span>
+			<div class="input-group input-group-divider grid-cols-[1fr_auto]">
+				<input type="number" bind:value={digitalPrice} />
+				<div class="input-group-shim">€</div>
+			</div>
+		</label>
+	{/if}
+	<button
+		class="text-sm underline"
+		tabindex="-1"
+		on:click={() => {
+			isbn = '';
+			digitalPrice = undefined;
+			directInput = !directInput;
+		}}
+	>
+		{#if !directInput}
+			Preis direkt eingeben
+		{:else}
+			Nach BN suchen
+		{/if}
+	</button>
 	<div
 		class="card z-10 p-2 shadow-xl overflow-y-auto max-h-96"
 		data-popup="isbnPopup"

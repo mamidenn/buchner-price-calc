@@ -66,7 +66,7 @@
 		<label class="label">
 			<span>Preis click & study</span>
 			<div class="input-group input-group-divider grid-cols-[1fr_auto]">
-				<input type="number" bind:value={digitalPrice} />
+				<input type="number" min="0" step="0.01" inputmode="decimal" bind:value={digitalPrice} />
 				<div class="input-group-shim">€</div>
 			</div>
 		</label>

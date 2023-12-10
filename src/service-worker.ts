@@ -13,6 +13,8 @@ const ASSETS = [
 	...build, // the app itself
 	...files // everything in `static`
 ];
+const DYNAMIC = ['/data/prices.csv'];
+const STATIC = ASSETS.filter((v) => !DYNAMIC.includes(v));
 
 sw.addEventListener('install', (event) => {
 	// Create a new cache and add all files to it
@@ -43,8 +45,8 @@ sw.addEventListener('fetch', (event) => {
 		const url = new URL(event.request.url);
 		const cache = await caches.open(CACHE);
 
-		// `build`/`files` can always be served from the cache
-		if (ASSETS.includes(url.pathname)) {
+		// static files can always be served from the cache
+		if (STATIC.includes(url.pathname)) {
 			return cache.match(url.pathname);
 		}
 
